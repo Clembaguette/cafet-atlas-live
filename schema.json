@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Clembaguette/cafet-atlas-live/blob/main/schema.json",
+  "title": "Cafet Atlas Live export",
+  "type": "object",
+  "required": ["schema_version", "pack_version", "generated_at", "db"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "pack_version": {"type": "string"},
+    "generated_at": {"type": ["string", "null"], "format": "date-time"},
+    "db": {
+      "type": "object",
+      "required": ["teams", "claims", "comps"],
+      "properties": {
+        "teams": {"type": "array", "items": {"$ref": "#/$defs/team"}},
+        "claims": {"type": "object", "additionalProperties": {"$ref": "#/$defs/claim"}},
+        "comps": {"type": "object", "additionalProperties": {"$ref": "#/$defs/component"}}
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "team": {
+      "type": "object",
+      "required": ["id", "name", "members", "claims"],
+      "properties": {
+        "id": {"type": "integer"},
+        "name": {"type": "string"},
+        "leader": {"type": "integer"},
+        "members": {"type": "array", "items": {"type": "object", "required": ["pid"], "properties": {"pid": {"type": "integer"}}}},
+        "claims": {"type": "array", "items": {"oneOf": [{"type": "string"}, {"type": "object", "required": ["k"], "properties": {"k": {"type": "string"}}}]}},
+        "color": {"type": "string"},
+        "hex": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "cname": {"type": "string"},
+        "cap": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "claim": {
+      "type": "object",
+      "required": ["team", "cx", "cz"],
+      "properties": {
+        "team": {"type": "integer"},
+        "owner": {"type": "integer"},
+        "cx": {"type": "integer"},
+        "cz": {"type": "integer"},
+        "cid": {"type": "integer"},
+        "cap": {"type": "integer"},
+        "vis": {"type": "integer"},
+        "name": {"type": "string"},
+        "x": {"type": "integer"},
+        "y": {"type": "integer"},
+        "z": {"type": "integer"}
+      },
+      "additionalProperties": true
+    },
+    "component": {
+      "type": "object",
+      "properties": {"size": {"type": "integer", "minimum": 0}},
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
